@@ -44,7 +44,7 @@ def convertDataFrame(dataHash):
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
-        print >> sys.stderr, "Usage: wordcount <file>"
+        print >> sys.stderr, "Usage: parser_analysis <file>"
         exit(-1)
     sc = SparkContext("local[2]", "rails log analysis dashboard")
     sqlContext = SQLContext(sc)
@@ -59,7 +59,7 @@ if __name__ == "__main__":
     statics = parts.map(formStaticsRow)
     schemaStatics = sqlContext.createDataFrame(statics)
     schemaStatics.registerTempTable("statics")
-    methodCntEachDay = sqlContext.sql("SELECT count(method) as cnt, date  FROM statics group by date order by date desc limit 300").collect()
+    methodCntEachDay = sqlContext.sql("SELECT count(method) as cnt, date  FROM statics group by date order by date desc limit 30").collect()
     methodsSoFar = sqlContext.sql("select distinct method from statics").collect()
     urlsSoFar = sqlContext.sql("select distinct url from statics").collect()
     recentDays = sqlContext.sql("select distinct date from statics order by date desc limit 30").collect()
